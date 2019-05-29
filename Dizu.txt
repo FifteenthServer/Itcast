@@ -1,0 +1,83 @@
+package cn.itheima.map_DouDiZhu;
+
+import java.util.*;
+
+public class Demo {
+    public static void main(String[] args) {
+        //1.封装牌面
+        String[] colors = {"♥", "♠", "♦", "♣"};
+        String[] numbers = {"2", "A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3"};
+
+        Map<Integer, String> pokerMap = new HashMap<>();
+        int index = 0;
+        pokerMap.put(index++, "大王");
+        pokerMap.put(index++, "小王");
+
+        for (String n : numbers) {//数字必须放外层循环
+            for (String c : colors) {
+                pokerMap.put(index++,c + n);
+            }
+        }
+
+        //2.编号的集合
+        List<Integer> indexList = new ArrayList<> (pokerMap.keySet());
+        //3.洗牌--洗编号
+
+        Collections.shuffle(indexList);
+
+        //4.发牌--发编号
+        List<Integer> user1List = new ArrayList<>();
+        List<Integer> user2List = new ArrayList<>();
+        List<Integer> user3List = new ArrayList<>();
+        List<Integer> dipaiList = new ArrayList<>();
+
+
+        for (int i = 0; i < indexList.size(); i++) {
+            if (i >= indexList.size() - 3) {
+                dipaiList.add(indexList.get(i));
+            }else{
+                if (i % 3 == 0) {
+                    user1List.add(indexList.get(i));
+                } else if (i % 3 == 1) {
+                    user2List.add(indexList.get(i));
+                } else if (i % 3 == 2) {
+                    user3List.add(indexList.get(i));
+                }
+            }
+
+        }
+
+        //排序
+        Collections.sort(user1List);
+        Collections.sort(user2List);
+        Collections.sort(user3List);
+        Collections.sort(dipaiList);
+
+        //5.看牌
+        System.out.print("普京：");
+        lookPoker(user1List,pokerMap);
+
+        System.out.print("特朗普：");
+        lookPoker(user2List,pokerMap);
+
+        System.out.print("金三胖：");
+        lookPoker(user3List,pokerMap);
+
+        System.out.print("底牌：");
+        lookPoker(dipaiList,pokerMap);
+
+    }
+
+    public static void lookPoker(List<Integer> indexList, Map<Integer, String> pokerMap) {
+        StringBuilder bld = new StringBuilder("[");
+        for (int i = 0; i < indexList.size(); i++) {
+            bld.append(pokerMap.get(indexList.get(i)));
+            if (i < indexList.size() - 1) {
+                bld.append(", ");
+            }else{
+                bld.append("]");
+            }
+        }
+        System.out.println(bld.toString());
+    }
+}
